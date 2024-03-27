@@ -5,7 +5,7 @@
 
 import time
 import numpy as np
-import spconv
+import spconv.pytorch as spconv
 import torch
 import torch.nn.functional as F
 from torch import nn
