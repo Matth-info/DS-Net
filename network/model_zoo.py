@@ -535,6 +535,7 @@ class PolarOffsetSpconv(PolarOffset):
 class PolarOffsetSpconvPytorchMeanshift(PolarOffsetSpconv):
     def __init__(self, cfg):
         super(PolarOffsetSpconvPytorchMeanshift, self).__init__(cfg)
+        print("CONFIG : ", cfg)
         self.pytorch_meanshift = pytorch_meanshift.PytorchMeanshift(cfg, self.ins_loss, self.cluster_fn)
         self.is_fix_semantic_instance = False
 

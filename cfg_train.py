@@ -130,7 +130,6 @@ def PolarOffsetMain(args, cfg):
     elif args.pretrained_ckpt is not None:
         train_utils.load_pretrained_model(model, args.pretrained_ckpt, to_cpu=dist_train, logger=logger)
         print("TYPE MODEL : " , type(model))
-        model = transform_spconv1_spconv2(model)
         if not args.nofix:
             if args.fix_semantic_instance:
                 logger.info("Freezing backbone, semantic and instance part of the model.")
