@@ -113,6 +113,7 @@ def PolarOffsetMain(args, cfg):
     ckpt_fname = os.path.join(ckpt_dir, args.ckpt_name)
     epoch = -1
 
+    print("CHECKPOINT NAME : ", ckpt_fname)
     other_state = {}
     if args.pretrained_ckpt is not None and os.path.exists(ckpt_fname): #case of pretrained model
         logger.info("Now in pretrain mode and loading ckpt: {}".format(ckpt_fname))
@@ -128,6 +129,7 @@ def PolarOffsetMain(args, cfg):
         logger.info("Loaded Epoch: {}".format(epoch))
     elif args.pretrained_ckpt is not None:
         train_utils.load_pretrained_model(model, args.pretrained_ckpt, to_cpu=dist_train, logger=logger)
+        print("TYPE MODEL : " , type(model))
         model = transform_spconv1_spconv2(model)
         if not args.nofix:
             if args.fix_semantic_instance:
