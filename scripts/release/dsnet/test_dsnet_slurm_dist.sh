@@ -1,8 +1,8 @@
-ngpu=4
+ngpu=1
 tag=test_dsnet_slurm_dist
 
 srun -p ad_lidar \
-    --job-name=test_dsnet \
+    --job-name=test_dsnet \ 
     --gres=gpu:${ngpu} \
     --ntasks=${ngpu} \
     --ntasks-per-node=${ngpu} \

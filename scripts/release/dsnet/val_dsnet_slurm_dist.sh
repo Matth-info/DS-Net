@@ -1,4 +1,4 @@
-ngpu=4
+ngpu=1
 batch_size=4
 tag=val_dsnet_slurm_dist
 
