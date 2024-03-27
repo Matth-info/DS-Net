@@ -442,7 +442,7 @@ class Spconv_ins_offset_concatxyz_threelayers_head_cfg(nn.Module):
     def forward(self, fea, batch, prefix=''):
         fea = self.conv1(fea)
         fea = fea.replace_feature(self.act1(self.bn1(fea.features)))
-        fea = fea.replace_feature(self.conv2(fea))
+        fea = fea.replace_feature(self.conv2(fea.features))
         fea = fea.repplace_feature(self.act2(self.bn2(fea.features)))
         fea = self.conv3(fea)
         fea = fea.replace_feature(self.act3(self.bn3(fea.features)))

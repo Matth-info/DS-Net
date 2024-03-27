@@ -486,6 +486,7 @@ class PolarOffsetSpconv(PolarOffset):
         self.merge_func_name = cfg.MODEL.POST_PROCESSING.MERGE_FUNC
 
     def fix_semantic_parameters(self):
+       
         fix_list = [self.backbone, self.sem_head, self.vfe_model, self.fea_compression]
         for mod in fix_list:
             for p in mod.parameters():
