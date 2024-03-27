@@ -392,7 +392,7 @@ class Spconv_salsaNet_res_merge_cfg(nn.Module):
 
         up0e = self.ReconNet(up1e)
 
-        up0e = up0e.replace_feature( torch.cat((up0e.features, up1e.features), 1))
+        up0e = up0e.replace_feature(torch.cat((up0e.features, up1e.features), 1))
 
         return up0e, up0e
 
@@ -443,7 +443,7 @@ class Spconv_ins_offset_concatxyz_threelayers_head_cfg(nn.Module):
         fea = self.conv1(fea)
         fea = fea.replace_feature(self.act1(self.bn1(fea.features)))
         fea = fea.replace_feature(self.conv2(fea.features))
-        fea = fea.repplace_feature(self.act2(self.bn2(fea.features)))
+        fea = fea.replace_feature(self.act2(self.bn2(fea.features)))
         fea = self.conv3(fea)
         fea = fea.replace_feature(self.act3(self.bn3(fea.features)))
 
