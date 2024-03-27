@@ -79,8 +79,7 @@ class ResContextBlock(nn.Module):
         resA = self.conv3(resA)
         resA = resA.replace_feature(self.act3(resA.features))
         resA = resA.replace_feature(self.bn2(resA.features))
-        resA = resA.replace_feature(features + shortcut.features)
-
+        resA = resA.replace_feature(resA.features + shortcut.features)
         return resA
 
 class ResBlock(nn.Module):
