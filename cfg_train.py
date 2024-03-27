@@ -22,6 +22,20 @@ from dataloader import build_dataloader
 import warnings
 warnings.filterwarnings("ignore")
 
+
+def transform_spconv1_spconv2(pretrained_model):
+    for key in pretrained_model['net'].keys():
+        if 'xyzc_net' in key and 'weight' in key and pretrained_model['net'][key].dim() ==5:
+            # print(key)
+            # print(pretrained_model['net'][key].shape)
+            pretrained_model['net'][key] = pretrained_model['net'][key].permute([4,0,1,2,3])
+
+    for key in pretrained_model['optim']['state'].keys():
+        if pretrained_model['optim']['state'][key]['exp_avg'].dim()==5:
+            pretrained_model['optim']['state'][key]['exp_avg'] = pretrained_model['optim']['state'][key]['exp_avg'].permute([4,0,1,2,3])
+            pretrained_model['optim']['state'][key]['exp_avg_sq'] = pretrained_model['optim']['state'][key]['exp_avg_sq'].permute([4,0,1,2,3])
+    return pretrained_model
+
 def PolarOffsetMain(args, cfg):
     if args.launcher == None:
         dist_train = False
@@ -87,9 +101,10 @@ def PolarOffsetMain(args, cfg):
     else:
         test_dataset_loader = build_dataloader(args, cfg, split='test', logger=logger, no_shuffle=True, no_aug=True)
 
+    print("dataset is set up correctly !")
     ### create model
-    model = build_network(cfg)
-    model.cuda()
+    model = build_network(cfg) #architecture of the model is loaded 
+    model.cuda() #send to GPU 
 
     ### create optimizer
     optimizer = train_utils.build_optimizer(model, cfg)
@@ -99,7 +114,7 @@ def PolarOffsetMain(args, cfg):
     epoch = -1
 
     other_state = {}
-    if args.pretrained_ckpt is not None and os.path.exists(ckpt_fname):
+    if args.pretrained_ckpt is not None and os.path.exists(ckpt_fname): #case of pretrained model
         logger.info("Now in pretrain mode and loading ckpt: {}".format(ckpt_fname))
         if not args.nofix:
             if args.fix_semantic_instance:
@@ -113,6 +128,7 @@ def PolarOffsetMain(args, cfg):
         logger.info("Loaded Epoch: {}".format(epoch))
     elif args.pretrained_ckpt is not None:
         train_utils.load_pretrained_model(model, args.pretrained_ckpt, to_cpu=dist_train, logger=logger)
+        model = transform_spconv1_spconv2(model)
         if not args.nofix:
             if args.fix_semantic_instance:
                 logger.info("Freezing backbone, semantic and instance part of the model.")

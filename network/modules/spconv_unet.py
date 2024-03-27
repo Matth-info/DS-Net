@@ -40,6 +40,8 @@ def conv1x1(in_planes, out_planes, stride=1, indice_key=None):
     return spconv.SubMConv3d(in_planes, out_planes, kernel_size=1, stride=stride,
                      padding=1, bias=False, indice_key=indice_key)
 
+#the pre trained model have trained using v1. and we need to load them with v2. 
+#https://github.com/traveller59/spconv/issues/428
 
 
 class ResContextBlock(nn.Module):
@@ -63,13 +65,10 @@ class ResContextBlock(nn.Module):
 
     def forward(self, x):
         shortcut = self.conv1(x)
-        #shortcut.features = self.act1(shortcut.features)
         shortcut = shortcut.replace_feature(self.act1(shortcut.features))
-        #shortcut.features = self.bn0(shortcut.features)
         shortcut = shortcut.replace_feature(self.bn0(shortcut.features))
 
         shortcut = self.conv1_2(shortcut)
-        #shortcut.features = self.act1_2(shortcut.features)
         shortcut = shortcut.replace_feature(self.act1_2(shortcut.features))
         shortcut = shortcut.replace_feature(self.bn0_2(shortcut.features))
 
@@ -344,7 +343,7 @@ class Spconv_salsaNet_res_cfg(nn.Module):
 
         up0e = self.ReconNet(up1e)
 
-        up0e.features = torch.cat((up0e.features, up1e.features), 1)
+        up0e = up0e.replace_feature( torch.cat((up0e.features, up1e.features), 1))
 
         return up0e, up0e
 
@@ -411,7 +410,7 @@ class Spconv_salsaNet_res_merge_cfg(nn.Module):
 
         up0e = self.ReconNet(up1e)
 
-        up0e.features = torch.cat((up0e.features, up1e.features), 1)
+        up0e = up0e.replace_feature( torch.cat((up0e.features, up1e.features), 1))
 
         return up0e, up0e
 
@@ -460,11 +459,11 @@ class Spconv_ins_offset_concatxyz_threelayers_head_cfg(nn.Module):
 
     def forward(self, fea, batch, prefix=''):
         fea = self.conv1(fea)
-        fea.features = self.act1(self.bn1(fea.features))
-        fea = self.conv2(fea)
-        fea.features = self.act2(self.bn2(fea.features))
+        fea = fea.replace_feature(self.act1(self.bn1(fea.features)))
+        fea = fea.replace_feature(self.conv2(fea))
+        fea = fea.repplace_feature(self.act2(self.bn2(fea.features)))
         fea = self.conv3(fea)
-        fea.features = self.act3(self.bn3(fea.features))
+        fea = fea.replace_feature(self.act3(self.bn3(fea.features)))
 
         grid_ind = batch[prefix + 'grid']
         xyz = batch[prefix + 'pt_cart_xyz']
@@ -508,11 +507,11 @@ class Spconv_tracking_siamese_head_cfg(nn.Module):
 
     def forward(self, fea, batch, prefix=''):
         fea = self.conv1(fea)
-        fea.features = self.act1(self.bn1(fea.features))
+        fea = fea.replace_feature(self.act1(self.bn1(fea.features)))
         fea = self.conv2(fea)
-        fea.features = self.act2(self.bn2(fea.features))
+        fea = fea.replace_feature(self.act2(self.bn2(fea.features)))
         fea = self.conv3(fea)
-        fea.features = self.act3(self.bn3(fea.features))
+        fea = fea.replace_feature(self.act3(self.bn3(fea.features)))
 
         grid_ind = batch[prefix + 'grid']
         xyz = batch[prefix + 'pt_cart_xyz']
@@ -555,11 +554,11 @@ class Spconv_tracking_head_cfg(nn.Module):
 
     def forward(self, fea, batch, prefix=''):
         fea = self.conv1(fea)
-        fea.features = self.act1(self.bn1(fea.features))
+        fea = fea.replace_feature(self.act1(self.bn1(fea.features)))
         fea = self.conv2(fea)
-        fea.features = self.act2(self.bn2(fea.features))
+        fea  = fea.replace_feature(self.act2(self.bn2(fea.features)))
         fea = self.conv3(fea)
-        fea.features = self.act3(self.bn3(fea.features))
+        fea = fea.replace_feature(self.act3(self.bn3(fea.features)))
 
         grid_ind = batch[prefix + 'grid']
         xyz = batch[prefix + 'pt_cart_xyz']
@@ -635,7 +634,7 @@ class Spconv_alsaNet_res(nn.Module):
 
         up0e = self.ReconNet(up1e)
 
-        up0e.features = torch.cat((up0e.features, up1e.features), 1)
+        up0e = up0e.replace_feature(torch.cat((up0e.features, up1e.features), 1))
 
         # up2e = self.upBlock3(up3e, down2b)
         # up1e = self.upBlock4(up2e, down1b)

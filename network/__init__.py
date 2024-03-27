@@ -10,4 +10,7 @@ __all__ = {
 }
 
 def build_network(cfg):
+
+    print("MODEL NAME : ", cfg.MODEL.NAME )
+
     return __all__[cfg.MODEL.NAME](cfg)
