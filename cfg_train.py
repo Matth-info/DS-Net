@@ -98,7 +98,6 @@ def PolarOffsetMain(args, cfg):
     model = build_network(cfg) #architecture of the model is loaded 
     model.cuda() #send to GPU 
 
-    print("model location : ", model.device)
     ### create optimizer
     optimizer = train_utils.build_optimizer(model, cfg)
 
