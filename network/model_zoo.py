@@ -569,9 +569,6 @@ class PolarOffsetSpconvPytorchMeanshift(PolarOffsetSpconv):
                 sem_logits = self.sem_head(sem_fea)
             pred_offsets, ins_fea_list = self.ins_head(ins_fea, batch)
 
-        print("pred_offsets : " , pred_offsets)
-        print("ins_fea_list :", ins_fea_list)
-        
 
         loss_dict = self.calc_loss(sem_logits, pred_offsets, batch, need_minus_one=False)
         valid = batch['pt_valid']
