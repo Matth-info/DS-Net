@@ -10,4 +10,4 @@ python -m torch.distributed.launch --nproc_per_node=${ngpu} cfg_train.py \
     --launcher pytorch \
     --fix_semantic_instance \
     --onlyval \
-    # --saveval # if you want to save the predictions of the validation set, uncomment this line
+    --saveval # if you want to save the predictions of the validation set, uncomment this line
