@@ -541,6 +541,9 @@ class PolarOffsetSpconvPytorchMeanshift(PolarOffsetSpconv):
         self.is_fix_semantic_instance = False
 
     def fix_semantic_instance_parameters(self):
+        """ 
+        Freeze all the parameters 
+        """
         fix_list = [self.backbone, self.sem_head, self.vfe_model, self.fea_compression, self.ins_head]
         for mod in fix_list:
             for p in mod.parameters():
@@ -613,6 +616,7 @@ class PolarOffsetSpconvPytorchMeanshift(PolarOffsetSpconv):
                 loss_dict['ins_preds'] = pt_ins_ids_preds
             loss_dict['ins_num'] = np.unique(pt_ins_ids_preds[0]).shape[0]
 
+        print(loss_dict)
         return loss_dict
 
 class PolarOffsetSpconvPytorchMeanshiftTrackingMultiFrames(PolarOffsetSpconvPytorchMeanshift):
