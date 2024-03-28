@@ -36,15 +36,15 @@ def dbscan_cluster(shifted_pcd, valid, min_samples=25, eps=0.2):
         return labels
 
 def meanshift_cluster(shifted_pcd, valid, bandwidth=1.0):
-    embedding_dim = shifted_pcd.shape[1]
+    embedding_dim = shifted_pcd.shape[1] #not always 3, the mean shift can be applied on embedded points
     clustered_ins_ids = np.zeros(shifted_pcd.shape[0], dtype=np.int32)
     valid_shifts = shifted_pcd[valid, :].reshape(-1, embedding_dim) if valid is not None else shifted_pcd
-    if valid_shifts.shape[0] == 0:
+    if valid_shifts.shape[0] == 0:  #extract only the points from the point cloud that have been consider as object point.
         return clustered_ins_ids
 
     ms = MeanShift(bandwidth=bandwidth, bin_seeding=True)
     try:
-        ms.fit(valid_shifts)
+        ms.fit(valid_shifts) #fit the mean shift sklearn algo
     except Exception as e:
         ms = MeanShift(bandwidth=bandwidth)
         ms.fit(valid_shifts)
@@ -54,7 +54,7 @@ def meanshift_cluster(shifted_pcd, valid, bandwidth=1.0):
     assert np.min(labels) > 0
     if valid is not None:
         clustered_ins_ids[valid] = labels
-        return clustered_ins_ids
+        return clustered_ins_ids #every thing class point receive a instance label
     else:
         return labels
 

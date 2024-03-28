@@ -534,6 +534,7 @@ class PolarOffsetSpconv(PolarOffset):
         return loss_dict
 
 class PolarOffsetSpconvPytorchMeanshift(PolarOffsetSpconv):
+    #this class is the actual DS Net implementation
     def __init__(self, cfg):
         super(PolarOffsetSpconvPytorchMeanshift, self).__init__(cfg)
         print("CONFIG : ", cfg)
@@ -620,7 +621,6 @@ class PolarOffsetSpconvPytorchMeanshift(PolarOffsetSpconv):
                 loss_dict['sem_preds'] = merged_sem_preds
                 loss_dict['ins_preds'] = pt_ins_ids_preds
             loss_dict['ins_num'] = np.unique(pt_ins_ids_preds[0]).shape[0]
-        print(loss_dict)
         
         return loss_dict
 

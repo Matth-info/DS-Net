@@ -120,6 +120,9 @@ class PytorchMeanshift(nn.Module):
         return clustered_ins_ids
 
     def down_sample(self, data):
+        """
+        Downsampling with Farthest Point Sampling. 
+        """
         ratio = (float(self.point_num_th) / data.shape[0]) if data.shape[0] != 0 else 10086
         if ratio >= 1.0:
             return None, None
@@ -199,6 +202,7 @@ class PytorchMeanshift(nn.Module):
             # fixed number of iteration
             if self.shift_mode in ['matrix_flat_kernel_bandwidth_weight']:
                 X_fea = batch['ins_fea_list'][batch_i][valid_[batch_i]][index_[batch_i]].reshape(-1, self.init_size)
+            #start Dynamic Shifting
             for iter_i in range(self.iteration):
                 if self.shift_mode == 'matrix_flat_kernel_bandwidth_weight':
                     new_X, bandwidth_weight = self.calc_shifted_matrix_flat_kernel_bandwidth_weight(X, X_fea, iter_i)
@@ -241,6 +245,8 @@ class PytorchMeanshift(nn.Module):
             if need_cluster:
                 # final cluster
                 if self.down_sample_mode == 'xyz':
+                    #X is the last iterates of the seeding points, they have converge to some virtual cluster points 
+                    #the closest ones need to be gathered together with a simple cluster algo Nearest Neighbors
                     ins_id = self.final_cluster(X, index_[batch_i], xyz_[batch_i], sampled_xyz_[batch_i], valid_[batch_i], batch_i, batch)
                 else:
                     raise NotImplementedError
