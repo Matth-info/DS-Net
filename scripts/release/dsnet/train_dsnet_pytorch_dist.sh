@@ -1,4 +1,4 @@
-ngpu=4
+ngpu=1
 tag=train_dsnet_pytorch_dist
 
 python -m torch.distributed.launch --nproc_per_node=${ngpu} cfg_train.py \
