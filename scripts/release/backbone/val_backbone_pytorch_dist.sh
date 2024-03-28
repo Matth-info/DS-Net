@@ -1,4 +1,4 @@
-ngpu=4
+ngpu=1
 tag=val_backbone_pytorch_dist
 
 python -m torch.distributed.launch --nproc_per_node=${ngpu} cfg_train.py \
@@ -9,4 +9,4 @@ python -m torch.distributed.launch --nproc_per_node=${ngpu} cfg_train.py \
     --tag ${tag} \
     --launcher pytorch \
     --onlyval \
-    # --saveval # if you want to save the predictions of the validation set, uncomment this line
+    --saveval # if you want to save the predictions of the validation set, uncomment this line

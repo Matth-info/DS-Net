@@ -23,19 +23,6 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-def transform_spconv1_spconv2(pretrained_model):
-    for key in pretrained_model['net'].keys():
-        if 'xyzc_net' in key and 'weight' in key and pretrained_model['net'][key].dim() ==5:
-            # print(key)
-            # print(pretrained_model['net'][key].shape)
-            pretrained_model['net'][key] = pretrained_model['net'][key].permute([4,0,1,2,3])
-
-    for key in pretrained_model['optim']['state'].keys():
-        if pretrained_model['optim']['state'][key]['exp_avg'].dim()==5:
-            pretrained_model['optim']['state'][key]['exp_avg'] = pretrained_model['optim']['state'][key]['exp_avg'].permute([4,0,1,2,3])
-            pretrained_model['optim']['state'][key]['exp_avg_sq'] = pretrained_model['optim']['state'][key]['exp_avg_sq'].permute([4,0,1,2,3])
-    return pretrained_model
-
 def PolarOffsetMain(args, cfg):
     if args.launcher == None:
         dist_train = False
@@ -83,6 +70,11 @@ def PolarOffsetMain(args, cfg):
     gpu_list = os.environ['CUDA_VISIBLE_DEVICES'] if 'CUDA_VISIBLE_DEVICES' in os.environ.keys() else 'ALL'
     logger.info('CUDA_VISIBLE_DEVICES=%s' % gpu_list)
 
+    if torch.cuda.is_available():
+        device =  'cuda' 
+    else : 
+        device = 'cpu'
+
     if dist_train:
         total_gpus = dist.get_world_size()
         logger.info('total_batch_size: %d' % (total_gpus * args.batch_size))
@@ -106,6 +98,7 @@ def PolarOffsetMain(args, cfg):
     model = build_network(cfg) #architecture of the model is loaded 
     model.cuda() #send to GPU 
 
+    print("model location : ", model.device)
     ### create optimizer
     optimizer = train_utils.build_optimizer(model, cfg)
 
