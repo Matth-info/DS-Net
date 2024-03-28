@@ -322,7 +322,7 @@ class Spconv_salsaNet_res_cfg(nn.Module):
 
         up0e = self.ReconNet(up1e)
 
-        up0e = up0e.replace_feature( torch.cat((up0e.features, up1e.features), 1))
+        up0e = up0e.replace_feature(torch.cat((up0e.features, up1e.features), 1))
 
         return up0e, up0e
 
