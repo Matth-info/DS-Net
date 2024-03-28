@@ -447,8 +447,8 @@ class Spconv_ins_offset_concatxyz_threelayers_head_cfg(nn.Module):
         grid_ind = batch[prefix + 'grid']
         xyz = batch[prefix + 'pt_cart_xyz']
         fea = fea.dense()
-        #fea = fea.permute(0, 2, 3, 4, 1)
-        fea = fea.permute(4, 0, 1, 2, 3)
+        fea = fea.permute(0, 2, 3, 4, 1)
+        #fea = fea.permute(4, 0, 1, 2, 3)
         pt_ins_fea_list = []
         for batch_i, grid_ind_i in enumerate(grid_ind):
             pt_ins_fea_list.append(fea[batch_i, grid_ind[batch_i][:,0], grid_ind[batch_i][:,1], grid_ind[batch_i][:,2]])
@@ -496,8 +496,8 @@ class Spconv_tracking_siamese_head_cfg(nn.Module):
         grid_ind = batch[prefix + 'grid']
         xyz = batch[prefix + 'pt_cart_xyz']
         fea = fea.dense()
-        #fea = fea.permute(0, 2, 3, 4, 1)
-        fea = fea.permute(4, 0, 1, 2, 3)
+        fea = fea.permute(0, 2, 3, 4, 1)
+        #fea = fea.permute(4, 0, 1, 2, 3)
         pt_ins_fea_list = []
         for batch_i, grid_ind_i in enumerate(grid_ind):
             pt_ins_fea_list.append(fea[batch_i, grid_ind[batch_i][:,0], grid_ind[batch_i][:,1], grid_ind[batch_i][:,2]])
@@ -544,8 +544,8 @@ class Spconv_tracking_head_cfg(nn.Module):
         grid_ind = batch[prefix + 'grid']
         xyz = batch[prefix + 'pt_cart_xyz']
         fea = fea.dense()
-        #fea = fea.permute(0, 2, 3, 4, 1)
-        fea = fea.permute(4, 0, 1, 2, 3)
+        fea = fea.permute(0, 2, 3, 4, 1)
+        #fea = fea.permute(4, 0, 1, 2, 3)
         pt_ins_fea_list = []
         for batch_i, grid_ind_i in enumerate(grid_ind):
             pt_ins_fea_list.append(fea[batch_i, grid_ind[batch_i][:,0], grid_ind[batch_i][:,1], grid_ind[batch_i][:,2]])

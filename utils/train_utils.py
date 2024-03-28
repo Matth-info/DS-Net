@@ -37,7 +37,7 @@ def find_match_key(key, dic):
             return _k
     return None
 
-def load_pretrained_model(model, filename, to_cpu=False, logger=None):
+"""def load_pretrained_model(model, filename, to_cpu=False, logger=None):
     if not os.path.isfile(filename):
         raise FileNotFoundError
 
@@ -63,6 +63,41 @@ def load_pretrained_model(model, filename, to_cpu=False, logger=None):
     for key in state_dict:
         if key not in update_model_state:
             logger.info('Not updated weight %s: %s' % (key, str(state_dict[key].shape)))
+"""
+def load_pretrained_model(model, filename,  to_cpu=False, logger=None):
+
+    if not os.path.isfile(filename):
+        raise FileNotFoundError
+
+    print("LOAD CHECKPOINT FROM : ", filename)
+    my_model_dict = model.state_dict()
+    if to_cpu == False:
+        pre_weight = torch.load(filename, map_location='cuda:'+str(device))
+    else:
+        pre_weight = torch.load(filename)
+    part_load = {}
+    match_size = 0
+    nomatch_size = 0
+    for k in pre_weight.keys():
+        value = pre_weight[k]
+        if k in my_model_dict and my_model_dict[k].shape == value.shape:
+            # print("loading ", k)
+            match_size += 1
+            part_load[k] = value
+        elif k in my_model_dict and my_model_dict[k].shape == value.permute(4,0,1,2,3).shape:
+            match_size += 1
+            part_load[k] = value.permute(4,0,1,2,3)
+        elif k in my_model_dict and k.split('.')[-2] == 'conv3':
+            match_size += 1
+            part_load[k] = value[0].unsqueeze(0).permute(4,0,1,2,3)
+        else:
+            nomatch_size += 1
+
+    print("matched parameter sets: {}, and no matched: {}".format(match_size, nomatch_size))
+
+    my_model_dict.update(part_load)
+    model.load_state_dict(my_model_dict)
+
 
 def load_params_with_optimizer(model, filename, to_cpu=False, optimizer=None, logger=None):
     if not os.path.isfile(filename):
