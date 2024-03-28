@@ -40,9 +40,6 @@ def conv1x1(in_planes, out_planes, stride=1, indice_key=None):
     return spconv.SubMConv3d(in_planes, out_planes, kernel_size=1, stride=stride,
                      padding=1, bias=False, indice_key=indice_key)
 
-#the pre trained model have trained using v1. and we need to load them with v2. 
-#https://github.com/traveller59/spconv/issues/428
-
 
 class ResContextBlock(nn.Module):
     def __init__(self, in_filters, out_filters, kernel_size=(3, 3, 3), stride=1, indice_key=None):
@@ -450,7 +447,8 @@ class Spconv_ins_offset_concatxyz_threelayers_head_cfg(nn.Module):
         grid_ind = batch[prefix + 'grid']
         xyz = batch[prefix + 'pt_cart_xyz']
         fea = fea.dense()
-        fea = fea.permute(0, 2, 3, 4, 1)
+        #fea = fea.permute(0, 2, 3, 4, 1)
+        fea = fea.permute(4, 0, 1, 2, 3)
         pt_ins_fea_list = []
         for batch_i, grid_ind_i in enumerate(grid_ind):
             pt_ins_fea_list.append(fea[batch_i, grid_ind[batch_i][:,0], grid_ind[batch_i][:,1], grid_ind[batch_i][:,2]])
@@ -498,7 +496,8 @@ class Spconv_tracking_siamese_head_cfg(nn.Module):
         grid_ind = batch[prefix + 'grid']
         xyz = batch[prefix + 'pt_cart_xyz']
         fea = fea.dense()
-        fea = fea.permute(0, 2, 3, 4, 1)
+        #fea = fea.permute(0, 2, 3, 4, 1)
+        fea = fea.permute(4, 0, 1, 2, 3)
         pt_ins_fea_list = []
         for batch_i, grid_ind_i in enumerate(grid_ind):
             pt_ins_fea_list.append(fea[batch_i, grid_ind[batch_i][:,0], grid_ind[batch_i][:,1], grid_ind[batch_i][:,2]])
@@ -545,7 +544,8 @@ class Spconv_tracking_head_cfg(nn.Module):
         grid_ind = batch[prefix + 'grid']
         xyz = batch[prefix + 'pt_cart_xyz']
         fea = fea.dense()
-        fea = fea.permute(0, 2, 3, 4, 1)
+        #fea = fea.permute(0, 2, 3, 4, 1)
+        fea = fea.permute(4, 0, 1, 2, 3)
         pt_ins_fea_list = []
         for batch_i, grid_ind_i in enumerate(grid_ind):
             pt_ins_fea_list.append(fea[batch_i, grid_ind[batch_i][:,0], grid_ind[batch_i][:,1], grid_ind[batch_i][:,2]])
