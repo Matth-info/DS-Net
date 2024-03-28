@@ -569,9 +569,9 @@ class PolarOffsetSpconvPytorchMeanshift(PolarOffsetSpconv):
                 sem_logits = self.sem_head(sem_fea)
             pred_offsets, ins_fea_list = self.ins_head(ins_fea, batch)
 
-        print("batch : ", batch)
+        """print("batch : ", batch)
         print("offset : " , pred_offsets )
-        print("ins_fea_list : ", ins_fea_list)
+        print("ins_fea_list : ", ins_fea_list)"""
 
         loss_dict = self.calc_loss(sem_logits, pred_offsets, batch, need_minus_one=False)
         valid = batch['pt_valid']
@@ -620,7 +620,8 @@ class PolarOffsetSpconvPytorchMeanshift(PolarOffsetSpconv):
                 loss_dict['sem_preds'] = merged_sem_preds
                 loss_dict['ins_preds'] = pt_ins_ids_preds
             loss_dict['ins_num'] = np.unique(pt_ins_ids_preds[0]).shape[0]
-
+        print(loss_dict)
+        
         return loss_dict
 
 class PolarOffsetSpconvPytorchMeanshiftTrackingMultiFrames(PolarOffsetSpconvPytorchMeanshift):
